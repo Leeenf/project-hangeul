@@ -1,0 +1,1005 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECT HANGUL | 한글 문명 복원 프로젝트</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#080d18;
+  --panel:#111c2e;
+  --panel2:#17253a;
+  --line:#29415e;
+  --cyan:#45e6ef;
+  --blue:#4e8fff;
+  --green:#50e3a4;
+  --red:#ff667c;
+  --yellow:#ffd166;
+  --text:#edf5ff;
+  --muted:#91a6c2;
+}
+
+* {box-sizing:border-box}
+body {
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 0%,#162c48 0%,transparent 55%),
+    linear-gradient(135deg,#080d18,#0c1423 60%,#09111e);
+  color:var(--text);
+  font-family:'Noto Sans KR',sans-serif;
+}
+button {font:inherit;cursor:pointer}
+button:disabled {cursor:not-allowed;opacity:.45}
+.screen {display:none;min-height:100vh;padding:28px 18px 45px}
+.screen.active {display:block}
+.container {width:min(960px,100%);margin:auto}
+.logo {
+  font-family:'Orbitron',sans-serif;
+  color:var(--cyan);
+  letter-spacing:3px;
+  font-size:13px;
+  font-weight:800;
+}
+.eyebrow {
+  color:var(--cyan);
+  font-family:'Orbitron',sans-serif;
+  font-size:11px;
+  letter-spacing:2px;
+}
+h1 {
+  font-size:clamp(32px,7vw,58px);
+  line-height:1.2;
+  margin:18px 0 12px;
+  letter-spacing:-2px;
+}
+h2 {font-size:27px;margin:12px 0}
+h3 {font-size:18px;margin:0}
+p {line-height:1.7}
+.muted {color:var(--muted)}
+.cyan {color:var(--cyan)}
+.green {color:var(--green)}
+.yellow {color:var(--yellow)}
+.red {color:var(--red)}
+.panel {
+  background:linear-gradient(145deg,rgba(22,38,60,.96),rgba(13,25,42,.96));
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:24px;
+  box-shadow:0 12px 40px rgba(0,0,0,.2);
+}
+.hero {
+  text-align:center;
+  padding:55px 15px 30px;
+}
+.hero-icon {
+  font-size:65px;
+  filter:drop-shadow(0 0 20px rgba(69,230,239,.35));
+}
+.subtitle {
+  max-width:620px;
+  margin:15px auto 28px;
+  color:var(--muted);
+}
+.primary {
+  border:0;
+  color:#07121e;
+  background:linear-gradient(110deg,var(--cyan),#79f7ce);
+  font-weight:800;
+  padding:16px 30px;
+  border-radius:12px;
+  box-shadow:0 5px 25px rgba(69,230,239,.2);
+  transition:.2s;
+}
+.primary:hover {transform:translateY(-2px);filter:brightness(1.08)}
+.secondary {
+  border:1px solid var(--line);
+  color:var(--text);
+  background:#14243a;
+  padding:12px 20px;
+  border-radius:10px;
+}
+.input {
+  width:min(330px,100%);
+  display:block;
+  margin:20px auto;
+  padding:14px;
+  background:#0a1525;
+  border:1px solid var(--line);
+  color:white;
+  border-radius:10px;
+  text-align:center;
+  font-size:16px;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.stage-card {
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:20px;
+  background:rgba(17,28,46,.9);
+  position:relative;
+  transition:.2s;
+}
+.stage-card.unlocked {border-color:#367b91}
+.stage-card.done {border-color:var(--green)}
+.stage-card h3 {margin:10px 0}
+.stage-card p {font-size:13px;color:var(--muted);margin:5px 0}
+.stage-number {
+  font-family:'Orbitron',sans-serif;
+  font-size:11px;
+  color:var(--cyan);
+}
+.stage-icon {font-size:30px}
+.stage-status {font-size:12px;color:var(--muted);margin-top:14px}
+.locked {opacity:.45}
+.map-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:25px;
+}
+.timer {
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 14px;
+  font-family:'Orbitron',sans-serif;
+  color:var(--yellow);
+  white-space:nowrap;
+}
+.progress-track {
+  height:8px;
+  background:#091321;
+  border-radius:20px;
+  overflow:hidden;
+  margin:14px 0;
+}
+.progress-fill {
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--green));
+  transition:width .3s;
+}
+.question-top {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:18px;
+}
+.pill {
+  display:inline-block;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:6px 12px;
+  color:var(--muted);
+  font-size:12px;
+}
+.difficulty {
+  color:var(--yellow);
+  border-color:#76623a;
+}
+.question-number {
+  color:var(--cyan);
+  font-family:'Orbitron',sans-serif;
+  font-size:12px;
+}
+.question {
+  font-size:clamp(18px,3vw,23px);
+  line-height:1.65;
+  font-weight:700;
+  margin:25px 0;
+  white-space:pre-line;
+}
+.question-sub {
+  color:var(--muted);
+  font-size:13px;
+  font-weight:400;
+  margin-top:10px;
+}
+.options {
+  display:grid;
+  gap:11px;
+}
+.option {
+  width:100%;
+  text-align:left;
+  border:1px solid var(--line);
+  background:#111f33;
+  color:var(--text);
+  border-radius:12px;
+  padding:16px;
+  line-height:1.55;
+  transition:.15s;
+}
+.option:hover:not(:disabled) {
+  border-color:var(--cyan);
+  background:#172d43;
+  transform:translateX(3px);
+}
+.option.correct {
+  border-color:var(--green);
+  background:rgba(80,227,164,.13);
+}
+.option.wrong {
+  border-color:var(--red);
+  background:rgba(255,102,124,.12);
+}
+.option .letter {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:25px;
+  height:25px;
+  border-radius:7px;
+  background:#20334c;
+  margin-right:10px;
+  color:var(--cyan);
+  font-weight:800;
+  font-size:12px;
+}
+.feedback {
+  display:none;
+  margin-top:20px;
+  padding:18px;
+  border-radius:12px;
+  line-height:1.7;
+}
+.feedback.show {display:block}
+.feedback.good {
+  background:rgba(80,227,164,.1);
+  border:1px solid rgba(80,227,164,.5);
+}
+.feedback.bad {
+  background:rgba(255,102,124,.1);
+  border:1px solid rgba(255,102,124,.5);
+}
+.feedback strong {display:block;margin-bottom:5px}
+.question-footer {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:22px;
+}
+.stat-row {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:20px 0;
+}
+.stat {
+  background:#0d192a;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+}
+.stat b {
+  display:block;
+  font-family:'Orbitron',sans-serif;
+  color:var(--cyan);
+  font-size:22px;
+  margin-bottom:5px;
+}
+.stat small {color:var(--muted)}
+.result-title {
+  font-size:clamp(30px,6vw,46px);
+  color:var(--yellow);
+  margin:20px 0;
+}
+.wrong-item {
+  border-bottom:1px solid var(--line);
+  padding:16px 0;
+  line-height:1.6;
+}
+.wrong-item:last-child {border-bottom:0}
+.wrong-item strong {color:var(--red)}
+.wrong-item p {margin:6px 0;color:var(--muted);font-size:14px}
+.center {text-align:center}
+.hidden {display:none!important}
+@media(max-width:620px) {
+  .grid {grid-template-columns:1fr}
+  .panel {padding:18px}
+  .screen {padding:18px 12px 35px}
+  .stat b {font-size:18px}
+  .question-footer {align-items:stretch;flex-direction:column}
+  .question-footer button {width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home" class="screen active">
+  <div class="container">
+    <div class="hero">
+      <div class="logo">SHINWOL MIDDLE SCHOOL · CLASSIFIED PROJECT</div>
+      <div class="hero-icon">🧬</div>
+      <div class="eyebrow">HANGUL CIVILIZATION RESTORATION</div>
+      <h1>PROJECT<br><span class="cyan">HANGUL</span></h1>
+      <p class="subtitle">
+        한글 문명 복원 프로젝트에 오신 것을 환영합니다.<br>
+        사라진 문자 체계의 흔적을 추적하고 한글의 비밀을 복원하세요.
+      </p>
+      <div class="panel" style="max-width:520px;margin:auto">
+        <h3>연구원 등록</h3>
+        <p class="muted" style="font-size:13px">복원 프로젝트에 참여할 연구원 이름을 입력하세요.</p>
+        <input id="studentName" class="input" maxlength="12" placeholder="연구원 이름">
+        <button id="startBtn" class="primary">▶ 연구 시작하기</button>
+        <p class="muted" style="font-size:12px;margin-top:18px">
+          TOTAL 80 MISSIONS · ADAPTIVE DIFFICULTY · 45 MIN
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="mapScreen" class="screen">
+  <div class="container">
+    <div class="map-top">
+      <div>
+        <div class="logo">PROJECT HANGUL</div>
+        <h2>복원 연구소</h2>
+        <div class="muted" id="welcomeName"></div>
+      </div>
+      <div class="timer" id="mapTimer">45:00</div>
+    </div>
+    <div class="panel" style="margin-bottom:20px">
+      <div class="eyebrow">MISSION STATUS</div>
+      <h3 style="margin-top:10px">한글 문명 복원 진행 상황</h3>
+      <div class="progress-track"><div id="totalProgress" class="progress-fill"></div></div>
+      <div class="muted" id="progressText">0 / 80 MISSIONS COMPLETED</div>
+    </div>
+    <div class="grid" id="stageGrid"></div>
+    <p class="muted center" style="font-size:12px;margin-top:22px">
+      ※ 각 구역의 미션을 완료해야 다음 구역이 개방됩니다.
+    </p>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="gameScreen" class="screen">
+  <div class="container">
+    <div class="map-top">
+      <div>
+        <div class="logo">PROJECT HANGUL / FIELD RESEARCH</div>
+        <h3 id="gameStageTitle" style="margin-top:8px"></h3>
+      </div>
+      <div class="timer" id="gameTimer">45:00</div>
+    </div>
+
+    <div class="panel">
+      <div class="question-top">
+        <span class="question-number" id="questionNumber">MISSION 01 / 20</span>
+        <span class="pill" id="stageProgress">ZONE 01</span>
+        <span class="pill difficulty" id="difficultyLabel">기본 난이도</span>
+      </div>
+      <div class="progress-track"><div id="stageProgressBar" class="progress-fill"></div></div>
+
+      <div class="question" id="questionText"></div>
+      <div class="options" id="options"></div>
+
+      <div id="feedback" class="feedback"></div>
+
+      <div class="question-footer">
+        <div class="muted" style="font-size:13px" id="adaptiveMessage">
+          연구 데이터 분석 중
+        </div>
+        <button id="nextBtn" class="primary hidden">다음 미션 →</button>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><b id="correctCount">0</b><small>정답</small></div>
+      <div class="stat"><b id="wrongCount">0</b><small>오답</small></div>
+      <div class="stat"><b id="accuracy">0%</b><small>정답률</small></div>
+    </div>
+    <button id="exitBtn" class="secondary">연구소 지도</button>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="resultScreen" class="screen">
+  <div class="container">
+    <div class="hero" style="padding-top:25px">
+      <div class="logo">PROJECT HANGUL / FINAL REPORT</div>
+      <div class="hero-icon">🏆</div>
+      <div class="eyebrow">RESTORATION COMPLETE</div>
+      <h1>MISSION<br><span class="cyan">CLEAR</span></h1>
+      <div class="muted" id="resultName"></div>
+      <div class="result-title" id="rankTitle"></div>
+      <p class="muted" id="rankMessage"></p>
+    </div>
+
+    <div class="panel">
+      <div class="stat-row">
+        <div class="stat"><b id="finalScore">0</b><small>최종 점수</small></div>
+        <div class="stat"><b id="finalCorrect">0/80</b><small>정답 문항</small></div>
+        <div class="stat"><b id="finalAccuracy">0%</b><small>정답률</small></div>
+      </div>
+      <h3>구역별 복원 결과</h3>
+      <div id="stageResults"></div>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h3>📁 오답 분석 보고서</h3>
+      <p class="muted" style="font-size:13px">틀린 문항과 해설을 확인하세요.</p>
+      <div id="wrongList"></div>
+    </div>
+
+    <div class="center" style="margin-top:25px">
+      <button id="restartBtn" class="primary">처음부터 다시 시작</button>
+    </div>
+  </div>
+</section>
+
+<script>
+"use strict";
+
+/* =====================================================
+   QUESTION BANK
+   difficulty: 1 = 기본 / 2 = 응용 / 3 = 심화
+===================================================== */
+
+const q = (question, options, answer, explanation, difficulty=1) => ({
+  question, options, answer, explanation, difficulty
+});
+
+const stages = [
+{
+  title:"ZONE 01. 훈민정음 자제원리",
+  icon:"📜",
+  description:"훈민정음의 창제 원리와 문자 체계를 복원하라.",
+  questions:[
+    q("훈민정음 자음 기본자 중 발음 기관의 모양을 본떠 만든 글자가 아닌 것은?",["ㄱ","ㄴ","ㅁ","ㅋ"],3,"ㅋ은 기본자 ㄱ에 획을 더해 만든 가획자이다."),
+    q("훈민정음의 자음 기본자에 해당하는 글자를 모두 고른 것은?",["ㄱ, ㄴ, ㅁ, ㅅ, ㅇ","ㄱ, ㄷ, ㅁ, ㅅ, ㅇ","ㄴ, ㄹ, ㅁ, ㅅ, ㅎ","ㄱ, ㄴ, ㅂ, ㅅ, ㅇ"],0,"자음 기본자는 ㄱ, ㄴ, ㅁ, ㅅ, ㅇ이다."),
+    q("자음 기본자 'ㄱ'의 제자 원리로 가장 적절한 것은?",["혀끝이 윗잇몸에 닿는 모양","혀뿌리가 목구멍을 막는 모양","입술의 모양","이의 모양"],1,"ㄱ은 혀뿌리가 목구멍을 막는 모양을 본뜬 글자이다."),
+    q("기본자 'ㅁ'에 획을 더하여 만든 글자에 해당하는 것은?",["ㄷ","ㅂ","ㅈ","ㅎ"],1,"ㅁ에 획을 더하여 ㅂ을 만들고, 여기에 다시 획을 더하여 ㅍ을 만들었다."),
+    q("다음 중 자음 기본자와 그 제자 원리가 바르게 연결된 것은?",["ㄴ - 이의 모양","ㅅ - 입술의 모양","ㅇ - 목구멍의 모양","ㅁ - 혀뿌리의 모양"],2,"ㅇ은 목구멍의 모양을 본뜬 글자이다."),
+    q("기본자 ㄴ에 획을 더하여 만든 글자끼리 바르게 묶인 것은?",["ㄷ, ㅌ","ㅂ, ㅍ","ㅈ, ㅊ","ㅋ, ㅎ"],0,"ㄴ 계열의 가획자는 ㄷ과 ㅌ이다."),
+    q("다음 중 기본자 ㅅ에 획을 더하여 만든 글자는?",["ㄷ","ㅈ","ㅂ","ㅋ"],1,"ㅅ에 획을 더하여 ㅈ을 만들고, 다시 획을 더하여 ㅊ을 만들었다."),
+    q("훈민정음의 자음 기본자 중 목구멍의 모양을 본뜬 글자는?",["ㄱ","ㅅ","ㅇ","ㅁ"],2,"ㅇ은 목구멍의 모양을 본뜬 기본자이다."),
+    q("다음 중 가획의 원리가 적용된 관계가 아닌 것은?",["ㄱ - ㅋ","ㄴ - ㄷ","ㅁ - ㅂ","ㄴ - ㄹ"],3,"ㄹ은 ㄴ에 획을 더한 가획자가 아니라 이체자이다."),
+    q("훈민정음의 자음 제자 원리에 대한 설명으로 적절한 것은?",["모든 자음은 서로 다른 발음 기관의 모양을 본떴다.","기본자에 획을 더해 소리의 세기를 구별하였다.","자음은 모두 모음 기본자를 결합하여 만들었다.","가획자는 기본자와 관계없이 임의로 만들었다."],1,"가획자는 기본자에 획을 더하여 소리의 세기 차이를 나타낸다."),
+    q("모음 기본자에 해당하지 않는 것은?",["ㆍ","ㅡ","ㅣ","ㅏ"],3,"모음 기본자는 ㆍ, ㅡ, ㅣ이다."),
+    q("모음 기본자 'ㆍ'가 상징하는 것은?",["하늘","땅","사람","해"],0,"ㆍ는 하늘을 상징한다."),
+    q("모음 기본자 'ㅡ'가 상징하는 것은?",["하늘","땅","사람","달"],1,"ㅡ는 땅을 상징한다."),
+    q("모음 기본자 'ㅣ'가 상징하는 것은?",["하늘","땅","사람","별"],2,"ㅣ는 사람을 상징한다."),
+    q("다음 중 모음 기본자에 획을 더해 만든 초출자만으로 묶인 것은?",["ㅗ, ㅏ, ㅜ, ㅓ","ㅛ, ㅑ, ㅠ, ㅕ","ㅣ, ㅡ, ㆍ","ㅐ, ㅔ, ㅚ, ㅟ"],0,"초출자는 ㆍ와 ㅡ 또는 ㅣ를 결합하여 만든 ㅗ, ㅏ, ㅜ, ㅓ이다."),
+    q("다음 중 재출자에 해당하는 것만으로 묶인 것은?",["ㅗ, ㅏ","ㅜ, ㅓ","ㅛ, ㅑ, ㅠ, ㅕ","ㅡ, ㅣ, ㆍ"],2,"재출자는 초출자에 획을 더하여 만든 ㅛ, ㅑ, ㅠ, ㅕ이다."),
+    q("모음 'ㅗ'의 제자 원리를 바르게 설명한 것은?",["ㅡ와 ㆍ를 결합하였다.","ㅣ와 ㆍ를 결합하였다.","ㆍ를 두 번 더하여 만들었다.","ㅣ에 획을 더하여 만들었다."],0,"ㅗ는 ㅡ 위에 ㆍ를 놓아 만든 초출자이다."),
+    q("모음 'ㅏ'의 제자 원리를 바르게 설명한 것은?",["ㅡ에 ㆍ를 오른쪽에 놓았다.","ㅣ에 ㆍ를 오른쪽에 놓았다.","ㅡ에 ㆍ를 아래에 놓았다.","ㅣ에 ㆍ를 위에 놓았다."],1,"ㅏ는 ㅣ의 오른쪽에 ㆍ를 놓아 만든 초출자이다."),
+    q("훈민정음의 모음 제자 원리에 대한 설명으로 적절하지 않은 것은?",["모음 기본자는 천·지·인을 상징한다.","초출자는 기본자를 결합하여 만들었다.","재출자는 초출자에 획을 더해 만들었다.","모든 모음자는 발음 기관의 모양을 본떠 만들었다."],3,"모음은 천·지·인의 상형과 결합 원리를 바탕으로 만들어졌다."),
+    q("다음 중 자음의 기본자와 가획자의 관계가 바르게 연결된 것은?",["ㄱ-ㅋ, ㄴ-ㄷ, ㅅ-ㅈ","ㄱ-ㄴ, ㅁ-ㅅ, ㅇ-ㅎ","ㄴ-ㅂ, ㅁ-ㅋ, ㅅ-ㄷ","ㄱ-ㅁ, ㅅ-ㅎ, ㅇ-ㅈ"],0,"ㄱ-ㅋ, ㄴ-ㄷ, ㅅ-ㅈ은 기본자와 가획자의 관계이다.",2)
+  ]
+},
+{
+  title:"ZONE 02. 현대 국어 자음 체계",
+  icon:"🔬",
+  description:"자음의 조음 위치와 조음 방법을 분석하라.",
+  questions:[
+    q("자음 'ㄱ'의 조음 위치와 조음 방법을 바르게 연결한 것은?",["양순음 - 파열음","치조음 - 마찰음","연구개음 - 파열음","경구개음 - 파찰음"],2,"ㄱ은 혀뿌리와 여린입천장 부근에서 나는 연구개 파열음이다."),
+    q("다음 중 양순음에 해당하는 자음만으로 묶인 것은?",["ㄴ, ㄷ, ㄹ","ㅁ, ㅂ, ㅍ","ㅅ, ㅆ, ㅎ","ㄱ, ㅋ, ㅇ"],1,"양순음은 두 입술을 이용하여 소리 내는 자음으로 ㅁ, ㅂ, ㅍ 등이 있다."),
+    q("다음 중 조음 위치가 다른 하나는?",["ㄴ","ㄷ","ㅅ","ㅁ"],3,"ㅁ은 양순음이고 나머지는 치조음이다."),
+    q("자음 'ㅅ'의 조음 방법은?",["파열음","마찰음","파찰음","비음"],1,"ㅅ은 공기를 좁은 틈으로 내보내 마찰을 일으키는 마찰음이다."),
+    q("다음 중 파찰음에 해당하는 것은?",["ㄱ","ㅅ","ㅈ","ㅁ"],2,"ㅈ, ㅊ, ㅉ은 파찰음이다."),
+    q("다음 중 비음에 해당하는 자음만으로 묶인 것은?",["ㄴ, ㅁ, ㅇ","ㄱ, ㄷ, ㅂ","ㅅ, ㅎ, ㅆ","ㄹ, ㅈ, ㅊ"],0,"비음은 공기가 코로 빠져나가며 나는 소리로 ㄴ, ㅁ, ㅇ이 있다."),
+    q("자음 'ㄹ'의 조음 방법은?",["파열음","마찰음","파찰음","유음"],3,"ㄹ은 공기가 혀 옆으로 흐르거나 혀끝이 한 번 닿아 나는 유음이다."),
+    q("다음 중 조음 방법은 같지만 조음 위치가 다른 자음끼리 짝지어진 것은?",["ㅁ - ㄴ","ㅂ - ㄷ","ㄱ - ㅋ","ㅅ - ㅆ"],1,"ㅂ과 ㄷ은 모두 파열음이지만 ㅂ은 양순음, ㄷ은 치조음이다."),
+    q("다음 중 조음 위치는 같지만 조음 방법이 다른 자음끼리 짝지어진 것은?",["ㅁ - ㅂ","ㄱ - ㄴ","ㅅ - ㅈ","ㅎ - ㅁ"],0,"ㅁ과 ㅂ은 모두 양순음이며, ㅁ은 비음, ㅂ은 파열음이다."),
+    q("자음 'ㅎ'의 조음 위치와 조음 방법을 바르게 연결한 것은?",["양순음 - 파열음","치조음 - 마찰음","연구개음 - 비음","목청소리 - 마찰음"],3,"ㅎ은 목청소리이자 마찰음이다."),
+    q("다음 중 경구개음에 해당하는 자음은?",["ㅈ","ㄱ","ㅁ","ㅎ"],0,"ㅈ, ㅊ, ㅉ은 경구개음이다."),
+    q("다음 중 연구개음에 해당하는 자음만으로 묶인 것은?",["ㄱ, ㅋ, ㄲ","ㄴ, ㄷ, ㅌ","ㅁ, ㅂ, ㅍ","ㅅ, ㅈ, ㅊ"],0,"ㄱ, ㅋ, ㄲ은 연구개음이다."),
+    q("다음 중 치조음에 해당하지 않는 것은?",["ㄴ","ㄷ","ㅅ","ㅈ"],3,"ㅈ은 경구개음이다."),
+    q("다음 중 파열음에 해당하는 자음만으로 묶인 것은?",["ㄱ, ㄷ, ㅂ","ㅅ, ㅆ, ㅎ","ㅈ, ㅊ, ㅉ","ㄴ, ㅁ, ㅇ"],0,"ㄱ, ㄷ, ㅂ 등은 파열음이다."),
+    q("다음 중 조음 방법이 다른 하나는?",["ㅂ","ㄷ","ㄱ","ㅁ"],3,"ㅁ은 비음이고 나머지는 파열음이다."),
+    q("다음 설명에 해당하는 자음은?\n'두 조음 기관이 완전히 닫혔다가 터지면서 소리가 난다.'",["마찰음","파열음","파찰음","유음"],1,"파열음은 공기의 흐름을 막았다가 터뜨려 내는 소리이다."),
+    q("다음 설명에 해당하는 자음은?\n'공기가 좁은 틈을 통과하면서 마찰을 일으킨다.'",["비음","파열음","마찰음","유음"],2,"마찰음은 좁은 틈 사이로 공기가 빠져나가며 마찰을 일으킨다."),
+    q("다음 중 조음 위치와 조음 방법이 모두 같은 자음끼리 묶인 것은?",["ㅂ - ㅁ","ㄴ - ㄷ","ㄱ - ㅅ","ㅈ - ㅎ"],1,"ㄴ과 ㄷ은 모두 치조음이다. 다만 조음 방법은 다르다.",2),
+    q("다음 중 조음 위치와 조음 방법이 모두 다른 자음끼리 짝지어진 것은?",["ㅁ - ㅂ","ㄱ - ㅋ","ㅅ - ㅈ","ㄴ - ㅎ"],3,"ㄴ은 치조 비음이고 ㅎ은 목청 마찰음으로 위치와 방법이 모두 다르다.",2),
+    q("다음 조건을 모두 만족하는 자음은?\n① 조음 위치는 연구개이다.\n② 조음 방법은 파열음이다.\n③ 예사소리이다.",["ㄱ","ㄲ","ㅋ","ㅇ"],0,"ㄱ은 연구개 파열음이며 예사소리이다.",2)
+  ]
+},
+{
+  title:"ZONE 03. 현대 국어 모음 체계",
+  icon:"🧭",
+  description:"모음의 혀 위치와 입술 모양을 추적하라.",
+  questions:[
+    q("모음의 분류 기준으로 적절하지 않은 것은?",["혀의 높낮이","혀의 앞뒤 위치","입술 모양","성대의 진동 여부"],3,"성대의 진동 여부는 주로 자음의 유성·무성 구분과 관련된다."),
+    q("다음 중 전설 모음에 해당하는 것은?",["ㅏ","ㅓ","ㅣ","ㅜ"],2,"ㅣ는 전설 모음이다."),
+    q("다음 중 후설 모음에 해당하는 것은?",["ㅣ","ㅔ","ㅐ","ㅗ"],3,"ㅗ는 후설 모음이다."),
+    q("다음 중 원순 모음에 해당하는 것은?",["ㅣ","ㅡ","ㅜ","ㅏ"],2,"ㅜ는 발음할 때 입술을 둥글게 오므리는 원순 모음이다."),
+    q("다음 중 평순 모음에 해당하는 것은?",["ㅗ","ㅜ","ㅟ","ㅣ"],3,"ㅣ는 입술을 둥글게 오므리지 않는 평순 모음이다."),
+    q("모음 'ㅏ'의 분류를 바르게 연결한 것은?",["전설·고모음·평순","후설·저모음·평순","후설·고모음·원순","전설·중모음·원순"],1,"ㅏ는 후설 저모음 평순 모음이다."),
+    q("모음 'ㅜ'의 분류를 바르게 연결한 것은?",["후설·고모음·원순","전설·고모음·평순","후설·저모음·평순","전설·중모음·원순"],0,"ㅜ는 후설 고모음 원순 모음이다."),
+    q("모음 'ㅡ'의 분류를 바르게 연결한 것은?",["전설·고모음·원순","후설·고모음·평순","후설·저모음·원순","전설·중모음·평순"],1,"ㅡ는 후설 고모음 평순 모음이다."),
+    q("다음 중 혀의 높낮이가 같은 모음끼리 짝지어진 것은?",["ㅣ - ㅜ","ㅏ - ㅣ","ㅗ - ㅓ","ㅜ - ㅏ"],0,"ㅣ와 ㅜ는 모두 고모음이다."),
+    q("다음 중 혀의 앞뒤 위치가 같은 모음끼리 짝지어진 것은?",["ㅣ - ㅏ","ㅔ - ㅐ","ㅗ - ㅣ","ㅜ - ㅔ"],1,"ㅔ와 ㅐ는 모두 전설 모음이다."),
+    q("다음 중 입술 모양이 다른 모음끼리 짝지어진 것은?",["ㅗ - ㅜ","ㅣ - ㅡ","ㅏ - ㅗ","ㅔ - ㅐ"],2,"ㅏ는 평순 모음, ㅗ는 원순 모음이다."),
+    q("다음 중 전설 원순 모음으로 분류되는 것은?",["ㅣ","ㅔ","ㅚ","ㅡ"],2,"학교 문법의 전통적인 모음 체계에서 ㅚ는 전설 원순 모음이다."),
+    q("다음 중 후설 원순 모음만으로 묶인 것은?",["ㅏ, ㅓ","ㅗ, ㅜ","ㅣ, ㅔ","ㅡ, ㅣ"],1,"ㅗ와 ㅜ는 후설 원순 모음이다."),
+    q("다음 중 전설 평순 모음에 해당하는 것은?",["ㅗ","ㅜ","ㅣ","ㅓ"],2,"ㅣ는 전설 평순 모음이다."),
+    q("다음 중 고모음만으로 묶인 것은?",["ㅏ, ㅓ","ㅣ, ㅜ","ㅐ, ㅔ","ㅗ, ㅏ"],1,"ㅣ와 ㅜ는 고모음이다."),
+    q("다음 중 저모음에 해당하는 것은?",["ㅣ","ㅡ","ㅏ","ㅜ"],2,"ㅏ는 저모음이다."),
+    q("다음 중 전설 모음이면서 평순 모음인 것은?",["ㅗ","ㅜ","ㅣ","ㅚ"],2,"ㅣ는 전설 평순 모음이다."),
+    q("다음 두 모음의 분류에서 차이가 나는 기준이 두 가지인 것은?",["ㅣ와 ㅔ","ㅗ와 ㅜ","ㅗ와 ㅡ","ㅏ와 ㅓ"],2,"ㅗ와 ㅡ는 혀의 높낮이와 입술 모양에서 차이가 난다.",2),
+    q("다음 조건을 모두 만족하는 모음은?\n① 후설 모음이다.\n② 고모음이다.\n③ 평순 모음이다.",["ㅜ","ㅗ","ㅡ","ㅣ"],2,"ㅡ는 후설 고모음 평순 모음이다.",2),
+    q("다음 조건을 모두 만족하는 모음은?\n① 전설 모음이다.\n② 원순 모음이다.\n③ 고모음이다.",["ㅣ","ㅔ","ㅚ","ㅟ"],3,"전통적인 학교 문법의 모음 체계에서 ㅟ는 전설 고모음 원순 모음이다.",2)
+  ]
+},
+{
+  title:"FINAL. 한글 복원 통합 미션",
+  icon:"⚡",
+  description:"훈민정음과 현대 국어의 지식을 결합해 최종 임무를 수행하라.",
+  questions:[
+    q("다음 중 훈민정음의 자음 기본자와 현대 국어의 조음 위치가 바르게 연결된 것은?",["ㄱ - 양순음","ㄴ - 치조음","ㅁ - 연구개음","ㅅ - 목청소리"],1,"ㄴ은 혀끝이 윗잇몸에 닿는 모양을 본뜬 글자이며 현대 국어에서 치조음이다."),
+    q("훈민정음의 기본자 'ㅅ'과 현대 국어의 자음 'ㅅ'에 대한 설명으로 적절한 것은?",["기본자 ㅅ은 입술 모양을 본떴고 현대 국어에서는 비음이다.","기본자 ㅅ은 이의 모양을 본떴고 현대 국어에서는 마찰음이다.","기본자 ㅅ은 목구멍 모양을 본떴고 현대 국어에서는 파열음이다.","기본자 ㅅ은 혀뿌리 모양을 본떴고 현대 국어에서는 파찰음이다."],1,"훈민정음의 ㅅ은 이의 모양을 본떴으며 현대 국어에서는 치조 마찰음이다."),
+    q("다음 중 훈민정음의 가획 원리와 현대 국어의 조음 방법을 모두 바르게 설명한 것은?",["ㄱ에 획을 더한 ㅋ은 연구개 파열음이다.","ㄴ에 획을 더한 ㄷ은 양순 파열음이다.","ㅅ에 획을 더한 ㅈ은 치조 마찰음이다.","ㅁ에 획을 더한 ㅂ은 연구개 비음이다."],0,"ㅋ은 ㄱ에 획을 더해 만든 글자이며 현대 국어에서 연구개 파열음이다."),
+    q("다음 중 모음 기본자와 그 상징이 바르게 연결된 것은?",["ㆍ - 사람","ㅡ - 하늘","ㅣ - 사람","ㅣ - 땅"],2,"ㆍ는 하늘, ㅡ는 땅, ㅣ는 사람을 상징한다."),
+    q("다음 중 모음의 제자 원리와 현대 국어의 모음 분류가 모두 바르게 연결된 것은?",["ㅗ - ㅡ와 ㆍ의 결합 / 후설 원순 모음","ㅏ - ㅡ와 ㆍ의 결합 / 전설 평순 모음","ㅜ - ㅣ와 ㆍ의 결합 / 전설 원순 모음","ㅣ - ㆍ와 ㅡ의 결합 / 후설 고모음"],0,"ㅗ는 ㅡ와 ㆍ를 결합하여 만들었으며 현대 국어에서 후설 원순 모음이다."),
+    q("다음 중 조음 위치는 같지만 조음 방법이 다른 자음끼리 묶인 것은?",["ㄱ - ㅋ","ㅁ - ㅂ","ㄴ - ㄷ","ㅅ - ㅎ"],1,"ㅁ과 ㅂ은 모두 양순음이며 ㅁ은 비음, ㅂ은 파열음이다."),
+    q("다음 중 조음 방법은 같지만 조음 위치가 다른 자음끼리 묶인 것은?",["ㅂ - ㄷ","ㅁ - ㅂ","ㄱ - ㅋ","ㅅ - ㅆ"],0,"ㅂ과 ㄷ은 파열음이며 조음 위치는 각각 양순음과 치조음이다."),
+    q("다음 중 모음의 분류 기준 세 가지가 모두 다른 것은?",["ㅣ와 ㅜ","ㅗ와 ㅡ","ㅏ와 ㅓ","ㅔ와 ㅐ"],1,"ㅗ와 ㅡ는 혀의 높낮이와 입술 모양이 다르며 혀의 앞뒤 위치는 같다."),
+    q("다음 조건을 모두 만족하는 자음을 고르시오.\n① 치조음이다.\n② 마찰음이다.\n③ 예사소리이다.",["ㄷ","ㅅ","ㅈ","ㄴ"],1,"ㅅ은 치조 마찰음이며 예사소리이다."),
+    q("다음 조건을 모두 만족하는 자음을 고르시오.\n① 양순음이다.\n② 비음이다.",["ㅂ","ㅍ","ㅁ","ㄴ"],2,"ㅁ은 양순 비음이다."),
+    q("다음 중 자음의 조음 위치가 다른 하나는?",["ㄱ","ㅋ","ㄲ","ㅊ"],3,"ㄱ, ㅋ, ㄲ은 연구개음이고 ㅊ은 경구개음이다."),
+    q("다음 중 모음의 분류가 다른 하나는?",["ㅗ","ㅜ","ㅚ","ㅏ"],3,"ㅏ는 평순 모음이며 나머지는 원순 모음이다."),
+    q("다음 설명에 해당하는 자음은?\n'입술을 닫아 공기의 흐름을 막았다가 터뜨리며, 코로 공기가 빠져나가지는 않는다.'",["ㅁ","ㅂ","ㄴ","ㅇ"],1,"ㅂ은 양순 파열음이다. ㅁ은 양순 비음이다."),
+    q("다음 설명에 해당하는 모음은?\n'혀의 앞뒤 위치는 후설이고, 혀의 높낮이는 고모음이며, 입술은 평평하다.'",["ㅣ","ㅜ","ㅡ","ㅗ"],2,"ㅡ는 후설 고모음 평순 모음이다."),
+    q("다음 중 훈민정음의 자음 제자 원리와 관련이 가장 적은 것은?",["발음 기관의 모양","기본자","가획","천·지·인"],3,"천·지·인은 모음 제자 원리와 관련된다."),
+    q("다음 중 훈민정음의 모음 제자 원리와 관련이 가장 적은 것은?",["천·지·인","기본자 ㆍ, ㅡ, ㅣ","초출자와 재출자","발음 기관의 모양"],3,"발음 기관의 모양을 본뜨는 것은 자음 제자 원리이다."),
+    q("다음 중 조음 위치와 조음 방법이 모두 다른 자음끼리 묶인 것은?",["ㅁ - ㅂ","ㄱ - ㅋ","ㄴ - ㅎ","ㅅ - ㅆ"],2,"ㄴ은 치조 비음, ㅎ은 목청 마찰음으로 위치와 방법이 모두 다르다."),
+    q("다음 중 전설 고모음이면서 평순 모음인 것은?",["ㅜ","ㅡ","ㅣ","ㅗ"],2,"ㅣ는 전설 고모음 평순 모음이다."),
+    q("다음 자료를 분석한 결과로 적절한 것은?\nA: 연구개 파열음\nB: 양순 비음\nC: 치조 마찰음\nD: 경구개 파찰음",["A는 ㄱ, B는 ㅁ, C는 ㅅ, D는 ㅈ이다.","A는 ㄴ, B는 ㅂ, C는 ㄷ, D는 ㅅ이다.","A는 ㅅ, B는 ㅁ, C는 ㄱ, D는 ㅈ이다.","A는 ㄱ, B는 ㄴ, C는 ㅈ, D는 ㅎ이다."],0,"ㄱ은 연구개 파열음, ㅁ은 양순 비음, ㅅ은 치조 마찰음, ㅈ은 경구개 파찰음이다.",2),
+    q("최종 복원 임무: 다음 조건을 모두 만족하는 글자와 모음의 조합은?\n① 자음은 연구개 파열음이다.\n② 모음은 후설 고모음 원순 모음이다.",["ㄱ + ㅜ","ㅁ + ㅣ","ㅅ + ㅡ","ㅈ + ㅏ"],0,"ㄱ은 연구개 파열음이고 ㅜ는 후설 고모음 원순 모음이다.",3)
+  ]
+}
+];
+
+/* =====================================================
+   GAME STATE
+===================================================== */
+
+const TOTAL = 80;
+const stagesState = stages.map(() => ({
+  unlocked:false,
+  completed:false,
+  answered:0,
+  correct:0,
+  wrong:0,
+  wrongQuestions:[]
+}));
+
+let student = "";
+let currentStage = 0;
+let currentQuestion = null;
+let currentQuestionIndex = 0;
+let questionPool = [];
+let answeredQuestions = [];
+let totalCorrect = 0;
+let totalWrong = 0;
+let timerSeconds = 45 * 60;
+let timerInterval = null;
+let gameActive = false;
+let selected = false;
+let streak = 0;
+let adaptiveLevel = 1.5;
+let sessionFinished = false;
+
+const $ = id => document.getElementById(id);
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+  $(id).classList.add("active");
+}
+
+function shuffle(array) {
+  const a = [...array];
+  for(let i=a.length-1;i>0;i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  student = $("studentName").value.trim() || "이름 없는 연구원";
+  currentStage = 0;
+  totalCorrect = 0;
+  totalWrong = 0;
+  timerSeconds = 45 * 60;
+  sessionFinished = false;
+  gameActive = true;
+
+  stagesState.forEach((s,i) => {
+    stagesState[i] = {
+      unlocked:i===0,
+      completed:false,
+      answered:0,
+      correct:0,
+      wrong:0,
+      wrongQuestions:[]
+    };
+  });
+
+  $("welcomeName").textContent = student + " 연구원";
+  startTimer();
+  renderMap();
+  showScreen("mapScreen");
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimer();
+  timerInterval = setInterval(() => {
+    if(!gameActive) return;
+    timerSeconds--;
+    updateTimer();
+    if(timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      finishGame(true);
+    }
+  },1000);
+}
+
+function updateTimer() {
+  const m = Math.floor(Math.max(0,timerSeconds)/60);
+  const s = Math.max(0,timerSeconds)%60;
+  const value = String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  $("mapTimer").textContent = value;
+  $("gameTimer").textContent = value;
+}
+
+function renderMap() {
+  const completed = stagesState.reduce((n,s)=>n+s.answered,0);
+  $("totalProgress").style.width = (completed/TOTAL*100)+"%";
+  $("progressText").textContent = completed+" / "+TOTAL+" MISSIONS COMPLETED";
+
+  $("stageGrid").innerHTML = stages.map((stage,i)=>{
+    const state = stagesState[i];
+    const locked = !state.unlocked;
+    const done = state.completed;
+    const status = done ? "✓ 복원 완료" : locked ? "🔒 접근 제한" : "▶ 연구 가능";
+    return `
+      <div class="stage-card ${locked?'locked':''} ${state.unlocked?'unlocked':''} ${done?'done':''}">
+        <div class="stage-number">ZONE 0${i+1}</div>
+        <div class="stage-icon">${stage.icon}</div>
+        <h3>${stage.title}</h3>
+        <p>${stage.description}</p>
+        <div class="stage-status">${status}</div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${state.answered/20*100}%"></div>
+        </div>
+        <button class="${locked?'secondary':'primary'}" style="width:100%;margin-top:10px"
+          data-stage="${i}" ${locked||done?'disabled':''}>
+          ${done?'MISSION CLEAR':locked?'LOCKED':'진입하기'}
+        </button>
+      </div>
+    `;
+  }).join("");
+
+  document.querySelectorAll("[data-stage]").forEach(btn=>{
+    btn.addEventListener("click",()=>enterStage(Number(btn.dataset.stage)));
+  });
+}
+
+function enterStage(index) {
+  if(!stagesState[index].unlocked || stagesState[index].completed) return;
+
+  currentStage = index;
+  currentQuestionIndex = 0;
+  answeredQuestions = [];
+  selected = false;
+  streak = 0;
+  adaptiveLevel = 1.5;
+
+  questionPool = stages[index].questions.map((item,i)=>({
+    ...item,
+    originalIndex:i,
+    used:false
+  }));
+
+  $("gameStageTitle").textContent = stages[index].title;
+  updateStats();
+  renderQuestion();
+  showScreen("gameScreen");
+}
+
+/* =====================================================
+   ADAPTIVE QUESTION SELECTION
+   - 모든 문항을 한 번씩 출제
+   - 정답이 이어지면 목표 난이도 상승
+   - 오답이면 목표 난이도 하락
+===================================================== */
+
+function getNextQuestion() {
+  const unused = questionPool.filter(q=>!q.used);
+  if(unused.length===0) return null;
+
+  const sorted = unused.sort((a,b)=>{
+    const diffA = Math.abs(a.difficulty-adaptiveLevel);
+    const diffB = Math.abs(b.difficulty-adaptiveLevel);
+    return diffA-diffB;
+  });
+
+  const bestDifference = Math.abs(sorted[0].difficulty-adaptiveLevel);
+  const candidates = sorted.filter(q=>
+    Math.abs(q.difficulty-adaptiveLevel)===bestDifference
+  );
+
+  return candidates[Math.floor(Math.random()*candidates.length)];
+}
+
+function difficultyText(level) {
+  if(level===1) return "기본 난이도";
+  if(level===2) return "응용 난이도";
+  return "심화 난이도";
+}
+
+function renderQuestion() {
+  if(!gameActive) return;
+
+  currentQuestion = getNextQuestion();
+
+  if(!currentQuestion) {
+    completeStage();
+    return;
+  }
+
+  selected = false;
+  currentQuestion.used = true;
+  currentQuestionIndex++;
+
+  const stage = stagesState[currentStage];
+  const qNumber = stage.answered+1;
+
+  $("questionNumber").textContent =
+    "MISSION "+String(qNumber).padStart(2,"0")+" / 20";
+  $("stageProgress").textContent = "ZONE 0"+(currentStage+1);
+  $("difficultyLabel").textContent = difficultyText(currentQuestion.difficulty);
+  $("stageProgressBar").style.width = (stage.answered/20*100)+"%";
+  $("questionText").textContent = currentQuestion.question;
+
+  const options = shuffle(currentQuestion.options.map((text,index)=>({
+    text,
+    originalIndex:index
+  })));
+
+  $("options").innerHTML = options.map((option,i)=>`
+    <button class="option" data-answer="${option.originalIndex}">
+      <span class="letter">${String.fromCharCode(65+i)}</span>
+      ${escapeHTML(option.text)}
+    </button>
+  `).join("");
+
+  document.querySelectorAll("[data-answer]").forEach(btn=>{
+    btn.addEventListener("click",()=>selectAnswer(Number(btn.dataset.answer)));
+  });
+
+  $("feedback").className="feedback";
+  $("feedback").innerHTML="";
+  $("nextBtn").classList.add("hidden");
+
+  $("adaptiveMessage").textContent =
+    "현재 연구 난이도: "+difficultyText(Math.round(adaptiveLevel));
+
+  updateStats();
+  updateTimer();
+}
+
+function escapeHTML(text) {
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function selectAnswer(answer) {
+  if(selected || !gameActive) return;
+  selected = true;
+
+  const correct = answer===currentQuestion.answer;
+  const stage = stagesState[currentStage];
+
+  stage.answered++;
+
+  if(correct) {
+    stage.correct++;
+    totalCorrect++;
+    streak++;
+    adaptiveLevel = Math.min(3,adaptiveLevel+0.65);
+  } else {
+    stage.wrong++;
+    totalWrong++;
+    streak=0;
+    adaptiveLevel = Math.max(1,adaptiveLevel-0.75);
+
+    stage.wrongQuestions.push({
+      question:currentQuestion.question,
+      selected:currentQuestion.options[answer],
+      answer:currentQuestion.options[currentQuestion.answer],
+      explanation:currentQuestion.explanation
+    });
+  }
+
+  document.querySelectorAll("[data-answer]").forEach(btn=>{
+    const choice = Number(btn.dataset.answer);
+    btn.disabled=true;
+    if(choice===currentQuestion.answer) btn.classList.add("correct");
+    else if(choice===answer && !correct) btn.classList.add("wrong");
+  });
+
+  const feedback=$("feedback");
+  feedback.className="feedback show "+(correct?"good":"bad");
+  feedback.innerHTML=`
+    <strong>${correct?"✓ 정답입니다!":"✕ 아쉽습니다. 정답을 확인하세요."}</strong>
+    ${correct?"정확하게 분석했습니다.":"정답: "+escapeHTML(currentQuestion.options[currentQuestion.answer])}
+    <br><br>${escapeHTML(currentQuestion.explanation)}
+  `;
+
+  $("adaptiveMessage").textContent =
+    correct
+      ? "연구 성과 상승! 다음 미션의 심화 난이도 비중이 증가합니다."
+      : "오류 데이터 확인! 다음 미션은 기본 난이도 비중이 증가합니다.";
+
+  $("nextBtn").classList.remove("hidden");
+  $("nextBtn").textContent =
+    stage.answered===20 ? "구역 복원 완료 →" : "다음 미션 →";
+
+  updateStats();
+  renderMapProgressOnly();
+}
+
+function updateStats() {
+  $("correctCount").textContent=totalCorrect;
+  $("wrongCount").textContent=totalWrong;
+  const attempted=totalCorrect+totalWrong;
+  $("accuracy").textContent=attempted?Math.round(totalCorrect/attempted*100)+"%":"0%";
+}
+
+function renderMapProgressOnly() {
+  const completed=stagesState.reduce((n,s)=>n+s.answered,0);
+  $("totalProgress").style.width=(completed/TOTAL*100)+"%";
+  $("progressText").textContent=completed+" / "+TOTAL+" MISSIONS COMPLETED";
+}
+
+function nextQuestion() {
+  if(!selected) return;
+  if(stagesState[currentStage].answered>=20) {
+    completeStage();
+  } else {
+    renderQuestion();
+  }
+}
+
+function completeStage() {
+  stagesState[currentStage].completed=true;
+
+  if(currentStage<stages.length-1) {
+    stagesState[currentStage+1].unlocked=true;
+    renderMap();
+    showScreen("mapScreen");
+  } else {
+    finishGame(false);
+  }
+}
+
+function finishGame(timeOver=false) {
+  if(sessionFinished) return;
+  sessionFinished=true;
+  gameActive=false;
+  clearInterval(timerInterval);
+
+  const attempted=totalCorrect+totalWrong;
+  const score=Math.round(totalCorrect/TOTAL*100);
+  const accuracy=attempted?Math.round(totalCorrect/attempted*100):0;
+
+  let rank="신입 복원 요원";
+  let message="한글 복원의 첫걸음을 내디뎠습니다. 다시 도전해 보세요!";
+
+  if(score>=95) {
+    rank="한글 창제 마스터";
+    message="완벽에 가까운 분석 능력! 한글 문명 복원에 성공했습니다.";
+  } else if(score>=85) {
+    rank="한글 복원 전문가";
+    message="뛰어난 분석 능력으로 대부분의 문자를 복원했습니다.";
+  } else if(score>=70) {
+    rank="문자 체계 분석가";
+    message="문자 체계의 핵심 원리를 잘 파악했습니다.";
+  } else if(score>=50) {
+    rank="견습 연구원";
+    message="기초적인 복원에 성공했습니다. 조금 더 연구해 보세요.";
+  }
+
+  $("resultName").textContent=student+" 연구원의 최종 연구 보고서";
+  $("rankTitle").textContent=rank;
+  $("rankMessage").textContent=
+    message+(timeOver?" (제한 시간 종료)":"");
+  $("finalScore").textContent=score;
+  $("finalCorrect").textContent=totalCorrect+"/80";
+  $("finalAccuracy").textContent=accuracy+"%";
+
+  $("stageResults").innerHTML=stages.map((stage,i)=>{
+    const s=stagesState[i];
+    const pct=Math.round(s.correct/20*100);
+    return `
+      <div style="padding:13px 0;border-bottom:1px solid var(--line)">
+        <div style="display:flex;justify-content:space-between;gap:10px">
+          <strong>${stage.title}</strong>
+          <span class="cyan">${s.correct}/20 (${pct}%)</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const wrongItems=[];
+  stagesState.forEach((s,i)=>{
+    s.wrongQuestions.forEach(item=>{
+      wrongItems.push({...item,stage:stages[i].title});
+    });
+  });
+
+  $("wrongList").innerHTML=wrongItems.length
+    ? wrongItems.map((item,i)=>`
+      <div class="wrong-item">
+        <strong>${i+1}. ${item.stage}</strong>
+        <div style="margin-top:7px">${escapeHTML(item.question)}</div>
+        <p>선택한 답: ${escapeHTML(item.selected)}</p>
+        <p>정답: ${escapeHTML(item.answer)}</p>
+        <p>해설: ${escapeHTML(item.explanation)}</p>
+      </div>
+    `).join("")
+    : '<p class="green">오답이 없습니다. 완벽한 복원입니다!</p>';
+
+  showScreen("resultScreen");
+}
+
+function resetGame() {
+  clearInterval(timerInterval);
+  gameActive=false;
+  sessionFinished=false;
+  $("studentName").value=student;
+  showScreen("home");
+}
+
+/* =====================================================
+   BUTTON EVENTS
+===================================================== */
+
+$("startBtn").addEventListener("click",startGame);
+$("nextBtn").addEventListener("click",nextQuestion);
+$("restartBtn").addEventListener("click",resetGame);
+
+$("exitBtn").addEventListener("click",()=>{
+  if(gameActive) {
+    renderMap();
+    showScreen("mapScreen");
+  }
+});
+
+/* Prevent accidental form submission */
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && $("home").classList.contains("active")) {
+    startGame();
+  }
+});
+
+/* Initial map state */
+renderMap();
+</script>
+</body>
+</html>
